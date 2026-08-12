@@ -1,0 +1,70 @@
+generated: '2026-08-11'
+method: probed
+source: live probes of https://www.coregen.com/.well-known/* and https://coregen.com/.well-known/*
+host: https://www.coregen.com
+note: >-
+  Every /.well-known/* path on www.coregen.com returns a hard HTTP 400 Wix
+  "400 Error: Bad Request" HTML error page — the platform rejects the
+  .well-known namespace outright rather than 404ing it. The apex host
+  coregen.com 301-redirects every path to www. No document was served on any
+  path, so NO `WellKnown` or `SecurityTxt` pointer is wired into apis.yml: a
+  recorded absence is not a served surface. A control probe of a nonsense path
+  (/definitely-not-a-real-path-abc123xyz) returned 404, confirming the site
+  does not blanket-200 unknown paths.
+control:
+  path: /definitely-not-a-real-path-abc123xyz
+  status: 404
+  note: soft-404 control — the origin returns real 404s, so the 404s below are genuine
+documents:
+- path: /.well-known/security.txt
+  status: 400
+  content_type: text/html
+  file: null
+- path: /.well-known/openid-configuration
+  status: 400
+  content_type: text/html
+  file: null
+- path: /.well-known/oauth-authorization-server
+  status: 400
+  content_type: text/html
+  file: null
+- path: /.well-known/oauth-protected-resource
+  status: 400
+  content_type: text/html
+  file: null
+- path: /.well-known/api-catalog
+  status: 400
+  content_type: text/html
+  file: null
+- path: /.well-known/ai-plugin.json
+  status: 400
+  content_type: text/html
+  file: null
+- path: /.well-known/agent-card.json
+  status: 400
+  content_type: text/html
+  file: null
+- path: /.well-known/agent.json
+  status: 400
+  content_type: text/html
+  file: null
+other_hosts:
+- host: https://coregen.com
+  result: 301 redirect to https://www.coregen.com for every /.well-known/* path
+subdomains_checked:
+  note: no developer-facing subdomain resolves in DNS (checked 2026-08-11)
+  results:
+  - name: api.coregen.com
+    dns: NXDOMAIN
+  - name: developer.coregen.com
+    dns: NXDOMAIN
+  - name: docs.coregen.com
+    dns: NXDOMAIN
+  - name: dev.coregen.com
+    dns: NXDOMAIN
+  - name: portal.coregen.com
+    dns: NXDOMAIN
+  - name: mcp.coregen.com
+    dns: NXDOMAIN
+  - name: agent.coregen.com
+    dns: NXDOMAIN
